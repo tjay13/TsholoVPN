@@ -286,6 +286,3 @@ echo "   - Installation Log        : cat /root/log-install.txt"  | tee -a log-in
 echo ""  | tee -a log-install.txt
 echo "------------------------- Modified by TsholoVPN -----------------------------"
 echo ""
-echo "-----Rebooting your IP: $MYIP -----"
-sleep 5
-reboot
