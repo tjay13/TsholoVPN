@@ -32,12 +32,12 @@ sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.local
 sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.d/rc.local
 
 #Add DNS Server ipv4
-echo "nameserver 185.37.37.37" > /etc/resolv.conf
-echo "nameserver 185.37.39.39" >> /etc/resolv.conf
-sed -i '$ i\echo "nameserver 185.37.37.37" > /etc/resolv.conf' /etc/rc.local
-sed -i '$ i\echo "nameserver 185.37.39.39" >> /etc/resolv.conf' /etc/rc.local
-sed -i '$ i\echo "nameserver 185.37.37.37" > /etc/resolv.conf' /etc/rc.d/rc.local
-sed -i '$ i\echo "nameserver 185.37.39.39" >> /etc/resolv.conf' /etc/rc.d/rc.local
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+sed -i '$ i\echo "nameserver 8.8.8.8" > /etc/resolv.conf' /etc/rc.local
+sed -i '$ i\echo "nameserver 8.8.4.4" >> /etc/resolv.conf' /etc/rc.local
+sed -i '$ i\echo "nameserver 8.8.8.8" > /etc/resolv.conf' /etc/rc.d/rc.local
+sed -i '$ i\echo "nameserver 8.8.4.4" >> /etc/resolv.conf' /etc/rc.d/rc.local
 
 # install wget and curl
 yum -y install wget curl
@@ -128,6 +128,17 @@ cd
 yum -y install fail2ban
 service fail2ban restart
 chkconfig fail2ban on
+
+# install stunnel
+yum -y install stunnel
+wget -O /etc/stunnel/stunnel.conf "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Stunnel/stunnel.conf"
+wget -O /etc/stunnel/stunnel.pem "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Stunnel/stunnel.pem"
+mkdir /var/run/stunnel
+chown nobody:nobody /var/run/stunnel
+sed -i '$ i\stunnel /etc/stunnel/stunnel.conf' /etc/rc.local
+sed -i '$ i\stunnel /etc/stunnel/stunnel.conf' /etc/rc.d/rc.local
+chkconfig stunnel on
+
 
 # install squid
 yum -y install squid
@@ -241,6 +252,7 @@ service dropbear restart
 service fail2ban restart
 service squid restart
 service crond start
+chkconfig stunnel on
 chkconfig crond on
 
 #clearing history
