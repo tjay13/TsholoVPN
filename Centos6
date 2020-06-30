@@ -234,6 +234,16 @@ chkconfig crond on
 # set time GMT +2
 ln -fs /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime
 
+# install stunnel
+yum -y install stunnel
+wget -O /etc/stunnel/stunnel.conf "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Stunnel/stunnel.conf"
+wget -O /etc/stunnel/stunnel.pem "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Stunnel/stunnel.pem"
+mkdir /var/run/stunnel
+chown nobody:nobody /var/run/stunnel
+sed -i '$ i\stunnel /etc/stunnel/stunnel.conf' /etc/rc.local
+sed -i '$ i\stunnel /etc/stunnel/stunnel.conf' /etc/rc.d/rc.local
+stunnel /etc/stunnel/stunnel.conf
+
 # finalizing
 service httpd restart
 service openvpn restart
@@ -264,9 +274,10 @@ echo "   - Auto-Reboot : [OFF]"  | tee -a log-install.txt
 echo "   - IPv6        : [OFF]"  | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
 echo "Application & Port Information"  | tee -a log-install.txt
-echo "   - OpenVPN     : TCP 443 "  | tee -a log-install.txt
+echo "   - OpenVPN     : TCP 1194 "  | tee -a log-install.txt
 echo "   - OpenSSH     : 22, 143"  | tee -a log-install.txt
 echo "   - Dropbear    : 109, 110, 442"  | tee -a log-install.txt
+echo "   - Stunnel     : 443"  | tee -a log-install.txt
 echo "   - Squid Proxy : 8000, 8080, 8888, 3128 (limit to IP Server)"  | tee -a log-install.txt
 echo "   - Badvpn      : 7300"  | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
