@@ -93,8 +93,8 @@ sed -i 's/venet0/eth0/g' /etc/iptables.up.rules
 iptables-restore < /etc/iptables.up.rules
 sysctl -w net.ipv4.ip_forward=1
 sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/g' /etc/sysctl.conf
-service openvpn restart
-chkconfig openvpn on
+systemctl -f start openvpn@server.service
+systemctl -f enable openvpn@server.service
 cd
 
 # install badvpn
@@ -246,7 +246,8 @@ stunnel /etc/stunnel/stunnel.conf
 
 # finalizing
 service httpd restart
-service openvpn restart
+systemctl -f start openvpn@server.service
+systemctl -f enable openvpn@server.service
 service sshd restart
 service dropbear restart
 service fail2ban restart
