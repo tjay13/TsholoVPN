@@ -244,6 +244,17 @@ sed -i '$ i\stunnel /etc/stunnel/stunnel.conf' /etc/rc.local
 sed -i '$ i\stunnel /etc/stunnel/stunnel.conf' /etc/rc.d/rc.local
 stunnel /etc/stunnel/stunnel.conf
 
+# install python proxy
+wget https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Other/proxy.py
+sed -i '$ i\screen -dmS pythonwe python proxy.py -p 80&' /etc/rc.local
+sed -i '$ i\screen -dmS pythonwe python proxy.py -p 80&' /etc/rc.d/rc.local
+screen -dmS pythonwe python proxy.py -p 80&
+
+# banner /etc/banner
+wget -O /etc/banner "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Other/banner"
+sed -i 's@#Banner none@Banner /etc/banner@g' /etc/ssh/sshd_config
+sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/banner"@g' /etc/default/dropbear
+
 # finalizing
 service httpd restart
 systemctl -f start openvpn@server.service
