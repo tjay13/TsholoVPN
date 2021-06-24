@@ -255,6 +255,9 @@ wget -O /etc/banner "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/T
 sed -i 's@#Banner none@Banner /etc/banner@g' /etc/ssh/sshd_config
 sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/banner"@g' /etc/default/dropbear
 
+# Ativate OpenVPN Auth Script
+sed -i -e 's/\r$//' /etc/openvpn/script/auth_vpn.sh
+
 # finalizing
 service httpd restart
 systemctl -f start openvpn@server.service
