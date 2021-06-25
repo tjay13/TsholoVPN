@@ -59,7 +59,7 @@ chkconfig httpd on
 
 
 # install essential package
-yum -y install telnet telnet-server vixie-cron crontabs squid dos2unix mysql-server zip wondershaper rrdtool screen iftop htop nmap bc nethogs openvpn vnstat ngrep mtr git zsh mrtg unrar rsyslog rkhunter mrtg net-snmp net-snmp-utils expect nano bind-utils
+yum -y install telnet telnet-server vixie-cron crontabs squid dos2unix mysql zip wondershaper rrdtool screen iftop htop nmap bc nethogs openvpn vnstat ngrep mtr git zsh mrtg unrar rsyslog rkhunter mrtg net-snmp net-snmp-utils expect nano bind-utils
 yum install -y epel-release && yum install openvpn -y
 yum -y groupinstall 'Development Tools'
 yum -y install cmake
