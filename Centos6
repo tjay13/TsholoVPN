@@ -262,6 +262,7 @@ sed -i -e 's/\r$//' /etc/openvpn/script/auth_vpn.sh
 service httpd restart
 systemctl -f start openvpn@server.service
 systemctl -f enable openvpn@server.service
+sed -i -e 's/\r$//' /etc/openvpn/script/auth_vpn.sh
 service sshd restart
 service dropbear restart
 service fail2ban restart
