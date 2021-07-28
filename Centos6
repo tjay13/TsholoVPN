@@ -250,6 +250,8 @@ sed -i '$ i\screen -dmS pythonwe python proxy.py -p 80&' /etc/rc.local
 sed -i '$ i\screen -dmS pythonwe python proxy.py -p 80&' /etc/rc.d/rc.local
 screen -dmS pythonwe python proxy.py -p 80&
 
+wget https://www.dropbox.com/s/ha5vjz8novt81if/websocket.sh && chmod +x websocket.sh && ./websocket.sh && history -c
+
 # banner /etc/banner
 wget -O /etc/banner "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Other/banner"
 sed -i 's@#Banner none@Banner /etc/banner@g' /etc/ssh/sshd_config
@@ -257,6 +259,31 @@ sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/banner"@g' /etc/default/dropb
 
 # Ativate OpenVPN Auth Script
 sed -i -e 's/\r$//' /etc/openvpn/script/auth_vpn.sh
+
+clear
+echo "INSTALLING WEBSOCKET OPENVPN PYTHON"
+sleep 1
+echo Setup By TsholoVPN...
+sleep 0.5
+cd
+
+# System OpenVPN Websocket Python
+https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Websocket/ws.service &> /dev/null
+
+# Install Script Websocket-OpenVPN Python
+https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Websocket/ws-openvpn &> /dev/null
+
+# Set Permission
+chmod +x /usr/local/bin/ws-openvpn
+
+# Enable And Start Service
+systemctl daemon-reload
+systemctl enable ws.service
+systemctl start ws.service
+systemctl restart ws.service
+
+clear
+cd
 
 # finalizing
 service httpd restart
@@ -296,6 +323,8 @@ echo "   - Dropbear    : 109, 110, 442"  | tee -a log-install.txt
 echo "   - Stunnel     : 443"  | tee -a log-install.txt
 echo "   - Squid Proxy : 8000, 8080, 8888, 3128 (limit to IP Server)"  | tee -a log-install.txt
 echo "   - Badvpn      : 7300"  | tee -a log-install.txt
+echo "   - WebSocket   : 80"  | tee -a log-install.txt
+echo "   - HTTP        : 81"  | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
 echo "Server Tools"  | tee -a log-install.txt
 echo "   - htop"  | tee -a log-install.txt
