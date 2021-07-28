@@ -8,13 +8,13 @@ sleep 0.5
 cd
 
 # System OpenVPN Websocket Python
-wget -O /etc/systemd/system/ws.service https://www.dropbox.com/s/q8wff1x4az0092e/ws.service &> /dev/null
+wget -O /etc/systemd/system/ws.service https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Websocket/ws.service &> /dev/null
 
 # Install Script Websocket-SSH Python
-wget -O /usr/local/bin/ws-openvpn https://www.dropbox.com/s/32qp1l8wb4zr9vb/ws-dropbear &> /dev/null
+wget -O /usr/local/bin/ws-openvpn https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Websocket/ws-openvpn &> /dev/null
 
 # Set Permission
-chmod +x /usr/local/bin/ws-dropbear
+chmod +x /usr/local/bin/ws-openvpn
 
 # Enable And Start Service
 systemctl daemon-reload
