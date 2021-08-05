@@ -10,7 +10,7 @@ BUFLEN = 4096 * 4
 TIMEOUT = 60
 DEFAULT_HOST = "127.0.0.1:1194"
 RESPONSE = 'HTTP/1.1 101 Switching Protocols \r\n\r\n'
-
+ 
 class Server(threading.Thread):
     def __init__(self, host, port):
         threading.Thread.__init__(self)
@@ -221,7 +221,7 @@ class ConnectionHandler(threading.Thread):
 def print_usage():
     print 'Usage: proxy.py -p <port>'
     print '       proxy.py -b <bindAddr> -p <port>'
-    print '       proxy.py -b 0.0.0.0 -p 80'
+    print '       proxy.py -b 0.0.0.0 -p 1080'
 
 def parse_args(argv):
     global LISTENING_ADDR
@@ -244,10 +244,12 @@ def parse_args(argv):
 
 def main(host=LISTENING_ADDR, port=LISTENING_PORT):
     
-    print "\n:-------PythonProxy-------:\n"
-    print "Listening addr: " + LISTENING_ADDR
-    print "Listening port: " + str(LISTENING_PORT) + "\n"
-    print ":-------------------------:\n"
+    print "\n ==============================\n"
+    print "\n         PYTHON PROXY          \n"
+    print "\n ==============================\n"
+    print "corriendo ip: " + LISTENING_ADDR
+    print "corriendo port: " + str(LISTENING_PORT) + "\n"
+    print "Se ha Iniciado Por Favor Cierre el Terminal\n"
     
     server = Server(LISTENING_ADDR, LISTENING_PORT)
     server.start()
