@@ -109,7 +109,7 @@ if($query->num_rows > 0)
 		$data .= '/usr/sbin/useradd -p $(openssl passwd -1 '.$password.') -M '.$username.';'.PHP_EOL;
 	}
 }
-$location = '/usr/sbin/kpn/active.sh';
+$location = '/usr/local/sbin/kpn/active.sh';
 $fp = fopen($location, 'w');
 fwrite($fp, $data) or die("Unable to open file!");
 fclose($fp);
@@ -137,7 +137,7 @@ if($query2->num_rows > 0)
 		$data2 .= '/usr/sbin/userdel '.$toadd.''.PHP_EOL;
 	}
 }
-$location2 = '/usr/sbin/kpn/inactive.sh';
+$location2 = '/usr/local/sbin/kpn/inactive.sh';
 $fp = fopen($location2, 'w');
 fwrite($fp, $data2) or die("Unable to open file!");
 fclose($fp);
