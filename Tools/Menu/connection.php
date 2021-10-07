@@ -106,7 +106,7 @@ if($query->num_rows > 0)
 		$username = $row['user_name'];
 		$password = decrypt_key($row['user_pass']);
 		$password = encryptor('decrypt',$password);		
-		$data .= '/usr/sbin/useradd -p $(openssl passwd -1 '.$password.') -M '.$username.';'.PHP_EOL;
+		$data .= '/usr/local/bin/user-add -p $(openssl passwd -1 '.$password.') -M '.$username.';'.PHP_EOL;
 	}
 }
 $location = '/usr/local/sbin/kpn/active.sh';
@@ -134,7 +134,7 @@ if($query2->num_rows > 0)
 	{
 		$data2 .= '';
 		$toadd = $row2['user_name'];	
-		$data2 .= '/usr/sbin/userdel '.$toadd.''.PHP_EOL;
+		$data2 .= '/usr/local/bin/user-delete '.$toadd.''.PHP_EOL;
 	}
 }
 $location2 = '/usr/local/sbin/kpn/inactive.sh';
