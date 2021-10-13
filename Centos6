@@ -276,6 +276,26 @@ echo " "
 echo " "
 echo "WEBSOCKET SUCCESSFULLY INSTALLED!"
 
+# Install PHP SSH
+clear
+echo "INSTALLING SSH PHP"
+sleep 1
+echo Setup By TsholoVPN...
+sleep 0.5
+mkdir /usr/sbin/kpn
+wget -O /usr/sbin/kpn/connection.php https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Menu/connection.php &> /dev/null
+chmod +x /usr/sbin/kpn/connection.php
+echo "* * * * * root /usr/bin/php /usr/sbin/kpn/connection.php >/dev/null 2>&1" > /etc/cron.d/connection-ssh
+echo "* * * * * root /bin/bash /usr/sbin/kpn/active.sh>/dev/null 2>&1"> /etc/cron.d/active-users
+echo "* * * * * root /bin/bash /usr/sbin/kpn/inactive.sh >/dev/null 2>&1" > /etc/cron.d/inactive-users
+sed -i -e 's/\r$//' /usr/sbin/kpn/active.sh
+sed -i -e 's/\r$//' /usr/sbin/kpn/inactive.sh
+clear
+echo " "
+echo " "
+echo "SSH PHP SUCCESSFULLY INSTALLED!"
+
+
 # finalizing
 service httpd restart
 systemctl -f start openvpn@server.service
