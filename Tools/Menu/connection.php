@@ -92,24 +92,24 @@ function encrypt_key($paswd)
 
 
 $data = '';
-$premium = "duration > 0 AND is_freeze = 0";
-$vip = "is_freeze = 0 AND vip_duration > 0";
-$private = "is_freeze = 0 AND private_duration > 0";
+$premium = "is_duration > 0 AND is_freeze = 0 AND is_active=1'";
+$vip = "is_freeze = 0 AND vip_duration > 0 AND is_active=1'";
+$private = "is_freeze = 0 AND private_duration > 0 AND is_active=1'";
 
-$query = $mysqli->query("SELECT * FROM users
-WHERE ".$premium." OR ".$private." ORDER by user_id DESC");
+$query = $mysqli->query("SELECT * FROM user
+WHERE ".$premium." OR ".$private." ORDER by id_user DESC");
 if($query->num_rows > 0)
 {
 	while($row = $query->fetch_assoc())
 	{
 		$data .= '';
-		$username = $row['user_name'];
-		$password = decrypt_key($row['user_pass']);
+		$username = $row['username'];
+		$password = decrypt_key($row['password']);
 		$password = encryptor('decrypt',$password);		
-		$data .= '/usr/local/bin/user-add -p $(openssl passwd -1 '.$password.') -M '.$username.';'.PHP_EOL;
+		$data .= '/usr/sbin/useradd -p $(openssl passwd -1 '.$password.') -M '.$username.';'.PHP_EOL;
 	}
 }
-$location = '/usr/local/sbin/kpn/active.sh';
+$location = '/usr/sbin/kpn/active.sh';
 $fp = fopen($location, 'w');
 fwrite($fp, $data) or die("Unable to open file!");
 fclose($fp);
@@ -117,15 +117,15 @@ fclose($fp);
 
 #In-Active and Invalid Accounts
 $data2 = '';
-$premium_deactived = "duration <= 0";
+$premium_deactived = "is_duration <= 0";
 $vip_deactived = "vip_duration <= 0";
 $private_deactived = "private_duration <= 0";
 $is_validated = "is_validated=0";
 $is_activate = "is_active=0";
 $freeze = "is_freeze=1";
-//$suspend = "suspend=1";
+$suspend = "suspend=1";
 
-$query2 = $mysqli->query("SELECT * FROM users 
+$query2 = $mysqli->query("SELECT * FROM user 
 WHERE ".$freeze." OR ".$premium_deactived ." AND ".$private_deactived." OR ".$is_activate."
 ");
 if($query2->num_rows > 0)
@@ -133,11 +133,11 @@ if($query2->num_rows > 0)
 	while($row2 = $query2->fetch_assoc())
 	{
 		$data2 .= '';
-		$toadd = $row2['user_name'];	
-		$data2 .= '/usr/local/bin/user-delete '.$toadd.''.PHP_EOL;
+		$toadd = $row2['username'];	
+		$data2 .= '/usr/bin/user-delete '.$toadd.''.PHP_EOL;
 	}
 }
-$location2 = '/usr/local/sbin/kpn/inactive.sh';
+$location2 = '/usr/sbin/kpn/inactive.sh';
 $fp = fopen($location2, 'w');
 fwrite($fp, $data2) or die("Unable to open file!");
 fclose($fp);
