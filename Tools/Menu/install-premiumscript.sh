@@ -9,10 +9,6 @@ sed -i '$ i\screen -AmdS ban /root/ban.sh' /etc/rc.d/rc.local
 echo "0 0 * * * root /usr/local/bin/user-expire" > /etc/cron.d/user-expire
 echo "0 0 * * * root /usr/local/bin/user-expire-pptp" > /etc/cron.d/user-expire-pptp
 
-echo "* * * * * root /usr/local/sbin/kpn/connection.php >/dev/null 2>&1" > /etc/cron.d/connection-ssh
-echo "* * * * * root /usr/local/sbin/kpn/active.sh>/dev/null 2>&1"> /etc/cron.d/active-users
-echo "* * * * * root /usr/local/sbin/kpn/inactive.sh >/dev/null 2>&1" > /etc/cron.d/inactive-users
-
 cat > /root/ban.sh <<END3
 #!/bin/bash
 #/usr/local/bin/user-ban
