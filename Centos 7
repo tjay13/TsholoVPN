@@ -18,6 +18,10 @@ MYIP2="s/xxxxxxxxx/$MYIP/g";
 # go to root
 cd
 
+# Mysql Database Info
+DatabasePass='s+(WT#r4CaB&'
+DatabaseName='vpnquest1_dbase'
+
 # disable se linux
 echo 0 > /selinux/enforce
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g'  /etc/sysconfig/selinux
@@ -283,12 +287,31 @@ sleep 1
 echo Setup By TsholoVPN...
 sleep 0.5
 
-mkdir /usr/local/bin/kpn
-wget -O /usr/local/bin/kpn/connection.php https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Menu/connection.php &> /dev/null
-chmod -R 777 /usr/local/bin/kpn/connection.php
-echo "* * * * * root /usr/bin/php /usr/local/bin/kpn/connection.php >/dev/null 2>&1" > /etc/cron.d/connection-ssh
-echo "* * * * * root /bin/bash /usr/local/bin/kpn/active.sh>/dev/null 2>&1"> /etc/cron.d/active-users
-echo "* * * * * root /bin/bash /usr/local/bin/kpn/inactive.sh >/dev/null 2>&1" > /etc/cron.d/inactive-users
+yum -y install mysql-server
+chown -R mysql:mysql /var/lib/mysql/
+chmod -R 755 /var/lib/mysql/
+chkconfig mysqld on
+service mysqld start
+
+# mysql_secure_installation
+so1=$(expect -c "
+expect \"\";  sleep 3; send \"\r\"
+expect \"\";  sleep 3; send \"Y\r\"
+expect \"\";  sleep 3; send \"$DatabasePass\r\"
+expect \"\";  sleep 3; send \"$DatabasePass\r\"
+expect \"\";  sleep 3; send \"Y\r\"
+expect \"\";  sleep 3; send \"n\r\"
+expect \"\";  sleep 3; send \"Y\r\"
+expect \"\";  sleep 3; send \"Y\r\"
+expect eof; ")
+echo "$so1"
+
+mkdir /usr/sbin/kpn
+wget -O /usr/sbin/kpn/connection.php https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Menu/connection.php &> /dev/null
+chmod -R 777 /usr/sbin/kpn/connection.php
+echo "* * * * * root /usr/bin/php /usr/sbin/kpn/connection.php >/dev/null 2>&1" > /etc/cron.d/connection-ssh
+echo "* * * * * root /bin/bash /usr/sbin/kpn/active.sh>/dev/null 2>&1"> /etc/cron.d/active-users
+echo "* * * * * root /bin/bash /usr/sbin/kpn/inactive.sh >/dev/null 2>&1" > /etc/cron.d/inactive-users
 
 clear
 echo " "
