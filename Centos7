@@ -3,7 +3,7 @@
 
 #Requirement
 if [ ! -e /usr/bin/curl ]; then
-   yum -y update && yum -y upgrade
+   #yum -y update && yum -y upgrade
    yum -y install curl
 fi
 
