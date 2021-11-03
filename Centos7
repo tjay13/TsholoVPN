@@ -271,10 +271,6 @@ cd
 wget -O /etc/systemd/system/ws.service https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Websocket/ws.service &> /dev/null
 wget -O /etc/systemd/system/wsssh.service https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Websocket/wsssh.service &> /dev/null
 
-# Install Script Websocket-SSH Python
-wget -O /usr/local/bin/ws-openvpn https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Websocket/ws-openvpn &> /dev/null
-wget -O /usr/local/bin/ws-ssh https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Websocket/ws-ssh &> /dev/null
-
 # Set Permission
 chmod +x /usr/local/bin/ws-openvpn
 chmod +x /usr/local/bin/ws-ssh
@@ -340,9 +336,6 @@ systemctl daemon-reload
 systemctl enable ws.service
 systemctl start ws.service
 systemctl restart ws.service
-systemctl enable wsssh.service
-systemctl start wsssh.service
-systemctl restart wsssh.service
 systemctl enable stunnel.service
 systemctl start stunnel.service
 systemctl restart stunnel.service
