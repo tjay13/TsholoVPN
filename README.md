@@ -7,3 +7,7 @@ Installation:
     Centos 7 x86 & x64
 
 yum -y install wget && wget https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Centos7 && chmod +x Centos7 && ./Centos7 && rm -f Centos7 && history -c
+
+## FOR AZURE
+yum -y install wget && wget https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Azure_Centos && chmod +x Azure_Centos && Azure_Centos && rm -f Azure_Centos && history -c
+
