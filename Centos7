@@ -164,7 +164,6 @@ Certificate:
                 keyid:22:21:EF:00:1A:59:92:07:01:34:8A:41:8F:CF:45:16:1A:EA:F3:B8
                 DirName:/C=ZA/ST=GT/L=Vereeniging/O=TsholoVPN/CN=TsholoVPN CA/emailAddress=admin@tsholovpn.info
                 serial:97:52:0E:6B:29:C3:15:27
-
             X509v3 Extended Key Usage: 
                 TLS Web Server Authentication
             X509v3 Key Usage: 
@@ -304,7 +303,6 @@ persist-key
 persist-tun
 verb 3 
 status /var/www/html/status/tcp.txt 1
-
 TeeJay01
 
 # Auth Script
@@ -314,21 +312,16 @@ username=`head -n1 $1 | tail -1`
 password=`head -n2 $1 | tail -1`
 tm="$(date +%s)"
 dt="$(date +'%Y-%m-%d %H:%M:%S')"
-
 HOST='185.61.137.174'
 USER='vpnquest1_user'
 PASS='s+(WT#r4CaB&'
 DB='vpnquest1_dbase'
-
 # PREMIUM
 PRE="user.username='$username' AND user.auth_vpn=md5('$password') AND user.confirmcode='y' AND user.status='live' AND user.is_freeze=1 AND user.is_active=1 AND user.is_ban=1 AND user.is_suspend=1 AND user.is_duration > 0"
-
 # VIP
 VIP="user.username='$username' AND user.auth_vpn=md5('$password') AND user.confirmcode='y' AND user.status='live' AND user.is_freeze=1 AND user.is_active=1 AND user.is_ban=1 AND user.is_suspend=1 AND user.vip_duration > 0"
-
 # PRIVATE
 PRIV="user.username='$username' AND user.auth_vpn=md5('$password') AND user.confirmcode='y' AND user.status='live' AND user.is_freeze=1 AND user.is_active=1 AND user.is_ban=1 AND user.is_suspend=1 AND user.private_duration > 0"
-
 Query="SELECT user.username FROM user WHERE $PRE OR $VIP OR $PRIV"
 auth_vpn=`mysql -u $USER -p$PASS -D $DB -h $HOST --skip-column-name -e "$Query"`
   
@@ -340,20 +333,11 @@ else
     echo "authentication failed."
 	exit 1
 fi
-
 TeeJay02
 
 chmod -R 755 /etc/openvpn/script/auth_vpn.sh
 sed -i -e 's/\r$//' /etc/openvpn/script/auth_vpn.sh
 
-wget -O /etc/iptables.up.rules "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/OpenVPN/iptables.up.rules"
-sed -i '$ i\iptables-restore < /etc/iptables.up.rules' /etc/rc.local
-sed -i '$ i\iptables-restore < /etc/iptables.up.rules' /etc/rc.d/rc.local
-MYIP=`dig +short myip.opendns.com @resolver1.opendns.com`;
-MYIP2="s/xxxxxxxxx/$MYIP/g";
-sed -i $MYIP2 /etc/iptables.up.rules;
-sed -i 's/venet0/eth0/g' /etc/iptables.up.rules
-iptables-restore < /etc/iptables.up.rules
 sysctl -w net.ipv4.ip_forward=1
 sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/g' /etc/sysctl.conf
 systemctl -f start openvpn@server.service
@@ -452,38 +436,6 @@ cd ddos-deflate-master
 ./install.sh
 rm -rf /root/master.zip
 
-# Setting IPtables
-cat > /etc/iptables.up.rules <<-END
-*filter
-:FORWARD ACCEPT [0:0]
-:INPUT ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
--A FORWARD -i eth0 -o ppp0 -m state --state RELATED,ESTABLISHED -j ACCEPT
--A FORWARD -i ppp0 -o eth0 -j ACCEPT
--A OUTPUT -d 23.66.241.170 -j DROP
--A OUTPUT -d 23.66.255.37 -j DROP
--A OUTPUT -d 23.66.255.232 -j DROP
--A OUTPUT -d 23.66.240.200 -j DROP
--A OUTPUT -d 128.199.213.5 -j DROP
--A OUTPUT -d 128.199.149.194 -j DROP
--A OUTPUT -d 128.199.196.170 -j DROP
--A OUTPUT -d 103.52.146.66 -j DROP
--A OUTPUT -d 5.189.172.204 -j DROP
-COMMIT
-*nat
-:PREROUTING ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-:POSTROUTING ACCEPT [0:0]
--A POSTROUTING -o eth0 -j MASQUERADE
--A POSTROUTING -s 192.168.100.0/24 -o eth0 -j MASQUERADE
--A POSTROUTING -s 10.1.0.0/24 -o eth0 -j MASQUERADE
--A POSTROUTING -s 10.200.0.0/24 -o eth0 -j MASQUERADE
-COMMIT
-END
-sed -i '$ i\iptables-restore < /etc/iptables.up.rules' /etc/rc.local
-sed -i '$ i\iptables-restore < /etc/iptables.up.rules' /etc/rc.d/rc.local
-iptables-restore < /etc/iptables.up.rules
-
 # install bmon
 yum -y install bmon
 
@@ -512,11 +464,9 @@ defaults
     timeout connect 10s
     timeout client 30s
     timeout server 30s
-
 frontend websocket
     bind localhost:444
     default_backend websocket
-
 backend websocket
     balance leastconn
     server websockets-ssh localhost:1080
@@ -644,7 +594,6 @@ echo ""  | tee -a log-install.txt
 echo "Server Included"  | tee -a log-install.txt
 echo "   - Timezone    : Africa/Johannesburg (GMT +2)"  | tee -a log-install.txt
 echo "   - Fail2Ban    : [ON]"  | tee -a log-install.txt
-echo "   - IPtables    : [ON]"  | tee -a log-install.txt
 echo "   - DDeflate    : [ON]"  | tee -a log-install.txt
 echo "   - Auto-Reboot : [OFF]"  | tee -a log-install.txt
 echo "   - IPv6        : [OFF]"  | tee -a log-install.txt
