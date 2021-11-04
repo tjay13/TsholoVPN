@@ -531,8 +531,8 @@ ipadd=$(wget -qO- ipv4.icanhazip.com);
 geoip=$(geoiplookup $ipadd | cut -d : -f 2);
 wget -O /etc/banner "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Other/banner"
 cat > /etc/banner <<-END
-<br><font color="blue"><b>Thank you for using TsholoVPN</b></font>
-<br><font color="red"><b>Location Server: $geoip</b></font><br>
+<br><font color="blue"><b>⚽TsholoVPN</b></font>
+<br><font color="red"><b>Server: $geoip</b></font><br>
 END
 sed -i 's@#Banner none@Banner /etc/banner@g' /etc/ssh/sshd_config
 sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/banner"@g' /etc/default/dropbear
