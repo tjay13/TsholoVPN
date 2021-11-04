@@ -15,46 +15,8 @@ if [ $MYIP = "" ]; then
 fi
 MYIP2="s/xxxxxxxxx/$MYIP/g";
 
-# Setting Terminal Message
-[[ `cat .profile` =~ Dexter ]] ||
-cat << 'intro' >> .profile
-clear
-echo -e '
-    |$$$$$$$$$$$$| |$$$$$$$$$$$$|
-         |$$|           |$$|
-         |$$|           |$$|
-         |$$|           |$$|
-         |$$|           |$$|
-         |$$|           |$$|
-         |$$|       |$$$$$$|
-         |__|       \______/  
-' && echo "
-========================================
-=++++++++ Welcome To TsholoVPN ++++++++=
-"
-intro
-
 # go to root
 cd
-echo -e " Choose VPN Server installation type:"
-echo -e " [1] Premium Server"
-echo -e " [2] VIP Server"
-echo -e " [3] Private Server"
-until [[ "$opts" =~ ^[1-3]$ ]]; do
-read -rp " Choose from [1-3]: " -e opts
-done
-
-case $opts in
-	1)
-		CATEGORY="user.is_duration > 0"
-		;;
-	2)
-		CATEGORY="user.vip_duration > 0"
-		;;
-   3)
-		CATEGORY="user.private_duration > 0"
-		;;
-	esac
 
 # Mysql Database Info
 $DatabaseHost = '185.61.137.174';
@@ -353,13 +315,21 @@ password=`head -n2 $1 | tail -1`
 tm="$(date +%s)"
 dt="$(date +'%Y-%m-%d %H:%M:%S')"
 
-HOST='$DatabaseHost'
-USER='$DatabaseUser'
-PASS='$DatabasePass'
-DB='$DatabaseName'
+HOST='185.61.137.174'
+USER='vpnquest1_user'
+PASS='s+(WT#r4CaB&'
+DB='vpnquest1_dbase'
 
-AUTH="user.username='$username' AND user.auth_vpn=md5('$password') AND user.confirmcode='y' AND user.status='live' AND user.is_freeze=1 AND user.is_active=1 AND user.is_ban=1 AND user.is_suspend=1 AND $CATEGORY"
-Query="SELECT user.username FROM user WHERE $AUTH"
+# PREMIUM
+PRE="user.username='$username' AND user.auth_vpn=md5('$password') AND user.confirmcode='y' AND user.status='live' AND user.is_freeze=1 AND user.is_active=1 AND user.is_ban=1 AND user.is_suspend=1 AND user.is_duration > 0"
+
+# VIP
+VIP="user.username='$username' AND user.auth_vpn=md5('$password') AND user.confirmcode='y' AND user.status='live' AND user.is_freeze=1 AND user.is_active=1 AND user.is_ban=1 AND user.is_suspend=1 AND user.vip_duration > 0"
+
+# PRIVATE
+PRIV="user.username='$username' AND user.auth_vpn=md5('$password') AND user.confirmcode='y' AND user.status='live' AND user.is_freeze=1 AND user.is_active=1 AND user.is_ban=1 AND user.is_suspend=1 AND user.private_duration > 0"
+
+Query="SELECT user.username FROM user WHERE $PRE OR $VIP OR $PRIV"
 auth_vpn=`mysql -u $USER -p$PASS -D $DB -h $HOST --skip-column-name -e "$Query"`
   
 if [ "$auth_vpn" == "$username" ]; then
@@ -534,13 +504,35 @@ wget -O /etc/stunnel/stunnel.conf "https://raw.githubusercontent.com/tjay13/Tsho
 wget -O /etc/stunnel/stunnel.pem "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Stunnel/stunnel.pem"
 wget -O /etc/systemd/system/stunnel.service https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Stunnel/stunnel.service &> /dev/null
 
+# Install Haproxy
+yum -y install haproxy
+cat > /etc/haproxy/haproxy.cfg <<-END
+defaults
+    mode http
+    timeout connect 10s
+    timeout client 30s
+    timeout server 30s
+
+frontend websocket
+    bind localhost:444
+    default_backend websocket
+
+backend websocket
+    balance leastconn
+    server websockets-ssh localhost:1080
+    server websockets-openvpn localhost:8880
+END
+
+systemctl restart haproxy
+systemctl enable haproxy
+
 # banner /etc/banner
 ipadd=$(wget -qO- ipv4.icanhazip.com);
 geoip=$(geoiplookup $ipadd | cut -d : -f 2);
 wget -O /etc/banner "https://raw.githubusercontent.com/tjay13/TsholoVPN/master/Tools/Other/banner"
 cat > /etc/banner <<-END
-<br><font color="blue"><b>Thank you for using TsholoVPN</b><br></font><br>
-<br><font color="red"><b> Location Server: $geoip</b></font><br>
+<br><font color="blue"><b>Thank you for using TsholoVPN</b></font>
+<br><font color="red"><b>Location Server: $geoip</b></font><br>
 END
 sed -i 's@#Banner none@Banner /etc/banner@g' /etc/ssh/sshd_config
 sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/banner"@g' /etc/default/dropbear
@@ -633,6 +625,10 @@ systemctl restart wsssh.service
 systemctl enable stunnel.service
 systemctl start stunnel.service
 systemctl restart stunnel.service
+
+systemctl restart haproxy
+systemctl enable haproxy
+
 chmod -R 755 /var/www/html
 
 #clearing history
