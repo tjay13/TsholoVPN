@@ -94,11 +94,9 @@ function encrypt_key($paswd)
 
 $data = '';
 $premium = "is_active=1 AND is_duration > 0";
-$vip = "is_active=1 AND vip_duration > 0";
-$private = "is_active=1 AND private_duration > 0";
 
 $query = $mysqli->query("SELECT * FROM user
-WHERE ".$premium." OR ".$vip." ORDER by id_user ASC");
+WHERE ".$premium." ORDER by id_user ASC");
 if($query->num_rows > 0)
 {
 	while($row = $query->fetch_assoc())
@@ -118,14 +116,12 @@ fclose($fp);
 #In-Active and Invalid Accounts
 $data2 = '';
 $premium_deactived = "is_duration <= 0";
-$vip_deactived = "vip_duration <= 0";
-$private_deactived = "private_duration <= 0";
 $is_activate = "is_active=0";
 $freeze = "is_freeze=0";
 $suspend = "is_suspend=0";
 
 $query2 = $mysqli->query("SELECT * FROM user 
-WHERE ".$suspend." OR ".$freeze." OR ".$premium_deactived ." AND ".$vip_deactived." OR ".$is_activate."
+WHERE ".$suspend." OR ".$freeze." OR ".$premium_deactived ." OR ".$is_activate."
 ");
 if($query2->num_rows > 0)
 {
